@@ -6,12 +6,17 @@ const I18N = {
   ar: {
     title: "كرة الأحداث",
     tagline: "تحليل مفتوح المصدر لأحداث مباريات كرة القدم",
+    navFixtures: "المباريات",
+    navResults: "التوقع والنتيجة",
+    navArchive: "الأرشيف",
+    navSchedule: "الجدولة",
+    navTech: "التفاصيل",
     freshness: (m) => `آخر تحديث: ${m.generated_at_utc} · بيانات حتى ${m.to} · ${m.matches} مباراة هذا الموسم`,
-    freshsource: "المصادر: Football-Data (نتائج وأحداث) + openfootball (جدولة مبدئية موسومة) — تحديث تلقائي 4 مرات أسبوعيًا",
+    freshsource: "المصادر: Football-Data (نتائج وأحداث) + openfootball (جدولة مبدئية موسومة)",
     srcLine: (s) => `مصدر الجدولة: ${s}`,
     srcProv: "openfootball — جدول مبدئي، توقيت الانطلاق غير مؤكد",
     grpTitle: "جرّب مجموعة أحداث — من العينة التاريخية فقط",
-    grpHint: "اختر الأحداث لترى كم مرة تحققت معًا في مباريات هذا الموسم. هذا وصف تاريخي مشترك من العينة (109 مباريات)، وليس توقع النموذج لهذه المباراة بعينها، ولا يُضرب احتمال في آخر.",
+    grpHint: "اختر الأحداث لترى كم مرة تحققت معًا في مباريات هذا الموسم. هذا وصف تاريخي مشترك من العينة، وليس توقع النموذج لهذه المباراة بعينها، ولا يُضرب احتمال في آخر.",
     grpPick: "اختر حدثًا واحدًا على الأقل",
     grpAll: "تحققت المجموعة كاملة",
     grpOneFails: "فشل حدث واحد منها على الأقل",
@@ -23,30 +28,52 @@ const I18N = {
     hResults: "التوقع مقابل النتيجة",
     hintResults: "كل توقع وثّقناه قبل انطلاق مباراته يظهر هنا بعد نهايتها مع ما حدث فعلًا. هذا هو قياس الدقة الحقيقي للمنصة على المدى الطويل.",
     demoHeading: "أمثلة توضيحية استرجاعية (مباريات لُعبت بالفعل — لا تدخل تقييم الدقة إطلاقًا)",
-    techHeading: "التفاصيل التقنية (تعريف الأحداث، قياس الدقة التجريبي، إعادة الإنتاج، الحدود)",
+    techHeading: "التفاصيل التقنية",
     tapToOpen: "اضغط لعرض التحليل",
     ukTime: "بتوقيت المصدر (المنطقة غير محددة)",
-    provTime: "موعد مبدئي — التاريخ والتوقيت غير مؤكدين (openfootball)",
+    provTime: "موعد مبدئي — غير مؤكد",
     schedHeading: "جدولة المصدر — موسم 2026-27",
-    hintSched: "المصدر التطوعي openfootball (CC0) يسجل النتائج حتى الجولة 5 فقط. ما بعدها مواعيده المخططة: كلها مبدئية وقد تتغير، والأوقات كما وردت في المصدر الذي لا يحدد منطقتها الزمنية، وغير مؤكدة. الجولات التي انقضى تاريخها بلا نتيجة مسجلة بانتظار تحديث المصدر — لا يمكن التحقق منها من هذا المصدر. للتصفح فقط، بلا تحليل ولا احتمالات.",
+    hintSched: "المصدر التطوعي openfootball (CC0) يسجل النتائج حتى الجولة 5 فقط. ما بعدها مواعيده المخططة: كلها مبدئية وقد تتغير، والأوقات كما وردت في المصدر الذي لا يحدد منطقتها الزمنية، وغير مؤكدة. للتصفح فقط، بلا تحليل ولا احتمالات.",
     schedStale: (n) => `${n} جولات انقضى تاريخها بلا نتيجة مسجلة — بانتظار تحديث المصدر`,
     schedStaleTag: " (انقضى تاريخها — بانتظار المصدر)",
     schedStaleRow: "هذه الجولة انقضى تاريخها دون نتيجة مسجلة في المصدر — المواعيد أدناه هي مخطط المصدر القديم، بانتظار تحديثه.",
     ukTimeTitle: "الوقت كما ورد في المصدر — المصدر لا يحدد منطقة زمنية؛ غير مؤكد",
-    archHeading: "الأرشيف — نتائج المواسم السابقة والحالية",
-    hintArch: "تصفح نتائج حقيقية من مصدر المجال العام openfootball (CC0). للتصفح فقط — بلا تحليل ولا احتمالات. النتيجة تُقرأ: صاحب الأرض أولًا — الرقم الكبير نتيجة نهاية المباراة، وبين قوسين نتيجة الشوط الأول.",
+    archHeading: "الأرشيف — نتائج المواسم",
+    hintArch: "نتائج حقيقية من مصدر المجال العام openfootball (CC0). للتصفح فقط — بلا تحليل ولا احتمالات. النتيجة تُقرأ: صاحب الأرض أولًا، وبين قوسين نتيجة الشوط الأول.",
     archPartial: (n) => `تغطية جزئية لهذا الموسم: ${n} مباراة مسجلة فقط — المصدر تطوعي وقد يتأخر عن الجدول الفعلي.`,
     archRound: (n) => `الجولة ${n}`,
-    archSeason: "الموسم",
+    thDate: "التاريخ",
+    thHome: "صاحب الأرض",
+    thScore: "النتيجة",
+    thAway: "الضيف",
+    thTime: "الوقت",
+    pmTitle: "البيانات المجمعة قبل المباراة",
+    pmAsOf: (m) => `حتى لقطة ${m.generated_at_utc}`,
+    pmDate: "التاريخ",
+    pmKickoff: "توقيت الانطلاق",
+    pmReferee: "الحكم",
+    pmRefHistory: "سجل الحكم في العينة",
+    pmTeamData: "تغطية بيانات الفريقين",
+    pmSource: "مصدر الموعد",
+    pmForecast: "حالة التوقع",
+    pmTimeProv: "غير مؤكد (مصدر مبدئي)",
+    pmTimeConf: (t) => `${t} بتوقيت المصدر`,
+    pmRefNone: "لم يُعلن بعد",
+    pmRefNoneNote: "خانة فارغة في المصدر — ليست صفر مباريات",
+    pmRefCount: (n) => `${n} مباراة سابقة في العينة`,
+    pmCovOk: "مكتملة في العينة",
+    pmCovLow: "محدودة — الوصف أقل ثباتًا",
+    pmSrcProv: "openfootball (مبدئي)",
+    pmSrcFD: "Football-Data (مؤكد)",
+    pmForeSaved: "محفوظ قبل الانطلاق",
+    pmForeCurrent: "تقدير اللقطة الحالية",
+    pmForeRetro: "استرجاعي — بعد الانطلاق",
     referee: (f) => `الحكم: ${f.referee || "لم يُعلن"}`,
-    flagLowTeam: "بيانات قليلة عن فريق",
-    flagLowRef: "بيانات قليلة عن الحكم",
-    flagCareful: "الإحصاءات الوصفية له أقل ثباتًا — معدلات الدوري المعروضة لا تتأثر بذلك",
     retro: (f) => `عرض استرجاعي: وُلّد بعد انطلاق المباراة (${f.kickoff_london || "غير معروف"}) — ليس توقعًا مسبقًا ولا يدخل تقييم الدقة.`,
     saved: (f, m) => `توقع محفوظ قبل الانطلاق (${f.kickoff_london}) ضمن لقطة ${m.generated_at_utc} — سيُقارن بالنتيجة الفعلية بعد المباراة.`,
     current: (m) => `تقدير ضمن لقطة ${m.generated_at_utc}.`,
-    leagueRate: "معدل الدوري الحالي لهذا الحدث — مرجع عام، وليس توقعًا مخصصًا لهذه المباراة",
-    noFixtures: "لا توجد مباريات قادمة في جدولة المصدر حاليًا. تظهر الجولة التالية هنا فور نشرها (عادة مساء الجمعة لمباريات نهاية الأسبوع) وتشغيل التحديث التلقائي.",
+    leagueRate: (ev) => `معدل الدوري الحالي — حدث في ${ev.count} من ${ev.of} مباراة. مرجع عام، وليس توقعًا مخصصًا لهذه المباراة`,
+    noFixtures: "لا توجد مباريات قادمة في جدولة المصدر حاليًا. تظهر الجولة التالية هنا فور نشرها وتشغيل التحديث التلقائي.",
     noResults: "لم تُقيَّم أي توقعات محفوظة بعد. أول مقارنة فعلية تظهر بعد انتهاء أول مباراة وثّقنا توقعها قبل انطلاقها.",
     resForecast: "التوقع قبل المباراة",
     resActual: "ما حدث فعلًا",
@@ -82,12 +109,17 @@ const I18N = {
   en: {
     title: "Kora Events",
     tagline: "Open-source football match-event analytics",
+    navFixtures: "Fixtures",
+    navResults: "Forecast vs outcome",
+    navArchive: "Archive",
+    navSchedule: "Schedule",
+    navTech: "Details",
     freshness: (m) => `Last updated: ${m.generated_at_utc} · data through ${m.to} · ${m.matches} matches this season`,
-    freshsource: "Sources: Football-Data (results, events) + openfootball (labeled provisional schedule) — auto-refreshed 4 times a week",
+    freshsource: "Sources: Football-Data (results, events) + openfootball (labeled provisional schedule)",
     srcLine: (s) => `Schedule source: ${s}`,
     srcProv: "openfootball — provisional schedule, kickoff time unconfirmed",
     grpTitle: "Try an event group — historical sample only",
-    grpHint: "Pick events to see how often they occurred together in this season's matches. This is a descriptive joint frequency from the sample (109 matches), not the model's forecast for this match, and no probabilities are multiplied.",
+    grpHint: "Pick events to see how often they occurred together in this season's matches. This is a descriptive joint frequency from the sample, not the model's forecast for this match, and no probabilities are multiplied.",
     grpPick: "Select at least one event",
     grpAll: "the whole group occurred",
     grpOneFails: "at least one of them failed",
@@ -99,30 +131,52 @@ const I18N = {
     hResults: "Forecast vs. outcome",
     hintResults: "Every forecast we recorded before kickoff appears here after the match with what actually happened. This is the platform's real long-run accuracy.",
     demoHeading: "Retrospective demo examples (already-played matches — never counted in accuracy evaluation)",
-    techHeading: "Technical details (event definitions, experimental accuracy, reproduction, limits)",
+    techHeading: "Technical details",
     tapToOpen: "Tap to view analysis",
     ukTime: "source time (timezone unspecified)",
-    provTime: "Provisional — date and kickoff time unconfirmed (openfootball)",
+    provTime: "Provisional — unconfirmed",
     schedHeading: "Source schedule — 2026-27 season",
-    hintSched: "The volunteer source openfootball (CC0) records results only up to round 5. Later rounds are its planned dates: all provisional and subject to change, times as recorded by the source, which specifies no timezone; unconfirmed. Rounds whose dates passed with no recorded result are awaiting a source update — they cannot be verified from this source. Browsing only, no analysis, no probabilities.",
+    hintSched: "The volunteer source openfootball (CC0) records results only up to round 5. Later rounds are its planned dates: all provisional and subject to change, times as recorded by the source, which specifies no timezone; unconfirmed. Browsing only, no analysis, no probabilities.",
     schedStale: (n) => `${n} rounds past their date with no recorded result — awaiting source update`,
     schedStaleTag: " (date passed — awaiting source)",
     schedStaleRow: "This round's date passed with no result recorded in the source — the dates below are the source's old plan, awaiting its update.",
     ukTimeTitle: "time as recorded in the source, which specifies no timezone; unconfirmed",
-    archHeading: "Archive — past and current season results",
-    hintArch: "Browse real results from the public-domain source openfootball (CC0). Browsing only — no analysis, no probabilities. Scores read home team first — the large number is full time, brackets show half time.",
+    archHeading: "Archive — season results",
+    hintArch: "Real results from the public-domain source openfootball (CC0). Browsing only — no analysis, no probabilities. Scores read home team first; brackets show half time.",
     archPartial: (n) => `Partial coverage for this season: only ${n} matches recorded — the source is volunteer-maintained and can lag the actual schedule.`,
     archRound: (n) => `Round ${n}`,
-    archSeason: "Season",
+    thDate: "Date",
+    thHome: "Home",
+    thScore: "Score",
+    thAway: "Away",
+    thTime: "Time",
+    pmTitle: "Collected pre-match data",
+    pmAsOf: (m) => `as of snapshot ${m.generated_at_utc}`,
+    pmDate: "Date",
+    pmKickoff: "Kickoff time",
+    pmReferee: "Referee",
+    pmRefHistory: "Referee history in sample",
+    pmTeamData: "Team data coverage",
+    pmSource: "Fixture source",
+    pmForecast: "Forecast status",
+    pmTimeProv: "unconfirmed (provisional source)",
+    pmTimeConf: (t) => `${t} source time`,
+    pmRefNone: "not announced yet",
+    pmRefNoneNote: "empty in the source — not zero matches",
+    pmRefCount: (n) => `${n} prior matches in sample`,
+    pmCovOk: "complete in sample",
+    pmCovLow: "limited — descriptive stats less stable",
+    pmSrcProv: "openfootball (provisional)",
+    pmSrcFD: "Football-Data (confirmed)",
+    pmForeSaved: "saved before kickoff",
+    pmForeCurrent: "current snapshot estimate",
+    pmForeRetro: "retrospective — post-kickoff",
     referee: (f) => `Referee: ${f.referee || "not announced"}`,
-    flagLowTeam: "Limited team data",
-    flagLowRef: "Limited referee data",
-    flagCareful: "its descriptive stats are less stable — the displayed league rates are unaffected",
     retro: (f) => `Retrospective demo: generated after the listed kickoff (${f.kickoff_london || "unknown"}) — not a pre-kickoff forecast, never counted in accuracy.`,
     saved: (f, m) => `Forecast saved before kickoff (${f.kickoff_london}) in the ${m.generated_at_utc} snapshot — it will be compared with the actual result after the match.`,
     current: (m) => `Estimate from the ${m.generated_at_utc} snapshot.`,
-    leagueRate: "Current league rate for this event — a general reference, not a match-specific forecast",
-    noFixtures: "No upcoming fixtures in the source schedule right now. The next round appears here once published (usually Friday evening for weekend matches) and the automatic refresh runs.",
+    leagueRate: (ev) => `Current league rate — occurred in ${ev.count} of ${ev.of} matches. A general reference, not a match-specific forecast`,
+    noFixtures: "No upcoming fixtures in the source schedule right now. The next round appears here once published and the automatic refresh runs.",
     noResults: "No saved forecasts evaluated yet. The first real comparison appears after the first match whose forecast we recorded before kickoff.",
     resForecast: "Pre-match forecast",
     resActual: "What happened",
@@ -187,6 +241,9 @@ async function boot() {
     ev.stopPropagation();
     toggleFavorite(star.dataset.key);
   });
+  setupNavSpy();
+  setupLazy("sec-archive", loadArchive);
+  setupLazy("sec-schedule", loadSchedule);
   try {
     const r = await fetch("data/snapshot.json", { cache: "no-store" });
     if (!r.ok) throw new Error("snapshot " + r.status);
@@ -202,7 +259,6 @@ document.getElementById("lang-toggle").addEventListener("click", () => {
   LANG = LANG === "ar" ? "en" : "ar";
   localStorage.setItem("kora-lang", LANG);
   applyLang();
-  if (SNAP) render(SNAP);
 });
 
 function applyLang() {
@@ -212,8 +268,12 @@ function applyLang() {
   document.getElementById("lang-toggle").textContent = T.toggle;
   setAuthLang(LANG);
   document.getElementById("t-title").textContent = T.title;
-  document.getElementById("t-tagline").textContent = T.tagline;
   document.getElementById("t-disclaimer").innerHTML = T.disclaimer;
+  document.getElementById("nl-fixtures").textContent = T.navFixtures;
+  document.getElementById("nl-results").textContent = T.navResults;
+  document.getElementById("nl-archive").textContent = T.navArchive;
+  document.getElementById("nl-schedule").textContent = T.navSchedule;
+  document.getElementById("nl-tech").textContent = T.navTech;
   document.getElementById("t-h-fixtures").textContent = T.hFixtures;
   document.getElementById("t-h-results").textContent = T.hResults;
   document.getElementById("t-hint-results").textContent = T.hintResults;
@@ -222,7 +282,7 @@ function applyLang() {
   document.getElementById("t-hint-arch").textContent = T.hintArch;
   document.getElementById("t-sched-heading").textContent = T.schedHeading;
   document.getElementById("t-hint-sched").textContent = T.hintSched;
-  if (ARCH) { fillArchSelectors(); renderArchive(); }
+  if (ARCH) { fillArchSeasons(); renderArchive(); }
   if (SCHED) { fillSchedRounds(); renderSchedule(); }
   document.getElementById("t-tech-heading").textContent = T.techHeading;
   document.getElementById("t-h-events").textContent = T.hEvents;
@@ -236,6 +296,42 @@ function applyLang() {
   document.getElementById("t-footer").innerHTML = T.footer;
   document.getElementById("freshsource").textContent = T.freshsource;
   if (SNAP) render(SNAP);
+}
+
+/* ---------- nav spy + lazy section loading ---------- */
+function setupNavSpy() {
+  const links = [...document.querySelectorAll(".nav-link")];
+  const secs = links
+    .map((l) => document.querySelector(l.getAttribute("href")))
+    .filter(Boolean);
+  if (!("IntersectionObserver" in window)) return;
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        links.forEach((l) =>
+          l.classList.toggle("active", l.getAttribute("href") === "#" + en.target.id)
+        );
+      });
+    },
+    { rootMargin: "-30% 0px -60% 0px" }
+  );
+  secs.forEach((s) => obs.observe(s));
+}
+
+function setupLazy(secId, loader) {
+  const sec = document.getElementById(secId);
+  let started = false;
+  const start = () => { if (!started) { started = true; loader(); } };
+  if ("IntersectionObserver" in window) {
+    const obs = new IntersectionObserver(
+      (entries) => { if (entries.some((e) => e.isIntersecting)) { start(); obs.disconnect(); } },
+      { rootMargin: "300px 0px" }
+    );
+    obs.observe(sec);
+  } else {
+    start();
+  }
 }
 
 function evLabel(id, ev) {
@@ -257,34 +353,66 @@ function probRows(f, s, T) {
           <span class="num">${PCT(p.prob)}</span>
         </div>
         <div class="bar"><span style="width:${Math.round(p.prob * 100)}%"></span></div>
-        <div class="sub">${T.leagueRate}</div>
+        <div class="sub">${T.leagueRate(s.events[e])}</div>
       </div>`;
     })
     .join("");
 }
 
+/* Pre-match variables panel: every variable actually collected for a
+   fixture, with coverage/source/as-of. Missing is shown as missing,
+   never as zero. No post-match statistic appears here. */
+function prematchPanel(f, s, T) {
+  const m = m_of(s);
+  const kickVal = f.provisional
+    ? `<span class="pm-missing">${T.pmTimeProv}</span>`
+    : T.pmTimeConf(f.time);
+  const refVal = f.referee
+    ? f.referee
+    : `<span class="pm-missing">${T.pmRefNone}</span>`;
+  const refNote = f.referee
+    ? T.pmRefCount(f.ref_prior_matches)
+    : T.pmRefNoneNote;
+  const covVal = f.low_team_data
+    ? `<span class="pm-missing">${T.pmCovLow}</span>`
+    : T.pmCovOk;
+  const srcVal = f.provisional ? T.pmSrcProv : T.pmSrcFD;
+  const foreVal =
+    f.kickoff_passed === true ? T.pmForeRetro :
+    f.kickoff_passed === false ? T.pmForeSaved : T.pmForeCurrent;
+  return `<div class="prematch">
+    <div class="prematch-head"><span>${T.pmTitle}</span><span class="asof">${T.pmAsOf(m)}</span></div>
+    <div class="prematch-grid">
+      <div class="pm-row"><span class="pm-label">${T.pmDate}</span><span class="pm-value">${f.date}</span></div>
+      <div class="pm-row"><span class="pm-label">${T.pmKickoff}</span><span class="pm-value">${kickVal}</span></div>
+      <div class="pm-row"><span class="pm-label">${T.pmReferee}</span><span class="pm-value">${refVal}</span><span class="pm-note">${refNote}</span></div>
+      <div class="pm-row"><span class="pm-label">${T.pmTeamData}</span><span class="pm-value">${covVal}</span></div>
+      <div class="pm-row"><span class="pm-label">${T.pmSource}</span><span class="pm-value">${srcVal}</span></div>
+      <div class="pm-row"><span class="pm-label">${T.pmForecast}</span><span class="pm-value">${foreVal}</span></div>
+    </div>
+  </div>`;
+}
+
 function fixtureCard(f, s, T) {
-  const flags = [];
-  if (f.low_team_data) flags.push(T.flagLowTeam);
-  // v2: referee-history warning removed — displayed rates are league-wide,
-  // not referee-conditioned (it belonged to the discontinued model).
   const tail = f.kickoff_passed === true
     ? `<div class="flags">${T.retro(f)}</div>`
     : f.kickoff_passed === false
       ? `<div class="sub preko">${T.saved(f, m_of(s))}</div>`
       : `<div class="sub">${T.current(m_of(s))}</div>`;
+  const metaChips = f.provisional
+    ? `<span class="chip date">${f.date}</span><span class="chip prov">${T.provTime}</span>`
+    : `<span class="chip date">${f.date}</span><span class="chip ok">${f.time} ${T.ukTime}</span>`;
   return `<details class="fixture-card">
     <summary>
       <span class="teams">${f.home} — ${f.away}</span>
-      <span class="when">${f.provisional ? `${f.date} · <span class="prov-badge">${T.provTime}</span>` : `${f.date} · ${f.time} ${T.ukTime}`}</span>
+      <span class="card-meta">${metaChips}</span>
       <span class="tap">${T.tapToOpen}</span>
       <button type="button" class="fav-star" data-key="${f.date}|${f.home}|${f.away}" aria-label="${T.favAdd}">${isFav(`${f.date}|${f.home}|${f.away}`) ? "★" : "☆"}</button>
     </summary>
     <div class="fixture-body">
-      <div class="sub">${T.referee(f)}</div>
-      ${flags.length ? `<div class="flags">⚠ ${flags.join(" · ")} — ${T.flagCareful}</div>` : ""}
+      ${prematchPanel(f, s, T)}
       ${probRows(f, s, T)}
-      <div class="sub src">${T.srcLine(f.src === "espn" ? "ESPN" : f.src === "openfootball" ? T.srcProv : f.src === "football-data.org" ? "Football-Data.org" : "Football-Data")}</div>
+      <div class="sub src">${T.srcLine(f.src === "openfootball" ? T.srcProv : f.src === "football-data.org" ? "Football-Data.org" : "Football-Data")}</div>
       <div class="grp">
         <div class="grp-title">${T.grpTitle}</div>
         <div class="grp-hint">${T.grpHint}</div>
@@ -317,12 +445,13 @@ function render(s) {
     : `<div class="notice small">${T.noFixtures}</div>`;
   document.getElementById("fixtures-demo").innerHTML =
     retro.map((f) => fixtureCard(f, s, T)).join("");
-  document.querySelector(".demo-block").hidden = retro.length === 0;
+  document.getElementById("sec-demo").hidden = retro.length === 0;
 
   // التوقع مقابل النتيجة: يظهر فقط عند وجود تقييمات فعلية
-  const resSec = document.getElementById("results-section");
+  const resSec = document.getElementById("sec-results");
   const results = s.results || [];
   resSec.hidden = results.length === 0;
+  document.getElementById("nl-results").style.display = results.length ? "" : "none";
   if (results.length) {
     document.getElementById("results").innerHTML = results.map((r) => {
       const rows = Object.entries(r.events).map(([e, v]) =>
@@ -335,7 +464,7 @@ function render(s) {
         </div>`).join("");
       return `<div class="fixture-card result-card">
         <div class="teams">${r.home} — ${r.away}</div>
-        <div class="when">${r.date}</div>
+        <div class="sub">${r.date}</div>
         <div class="sub">${T.resForecast} (${r.forecast_at})${r.model_info ? " · " + r.model_info : ""} · ${T.resActual}:</div>
         ${rows}
       </div>`;
@@ -399,13 +528,11 @@ document.addEventListener("change", (ev) => {
     `<div class="grp-row sub">${T.grpCI}: ${PCT(lo)} – ${PCT(hi)}</div>`;
 });
 
-
 // --- Historical results archive (openfootball CC0 rows only; FD stays
 // aggregates-only by publication policy) ---
 let ARCH = null;
 let archSeason = null;
 let archMd = null;
-const archBlock = document.querySelector(".arch-block");
 
 function archRoundNum(label) {
   const m = String(label).match(/(\d+)\s*$/);
@@ -419,14 +546,21 @@ function renderArchive() {
   const md = s.matchdays.find((x) => x.matchday === archMd) || s.matchdays[0];
   document.getElementById("arch-coverage").textContent =
     s.season === "2026-27" ? T.archPartial(s.played) : "";
-  document.getElementById("archive").innerHTML = md.matches
-    .map(
-      (m) => `<div class="arch-row" aria-label="${m.home} vs ${m.away}, full time ${m.ft[0]}-${m.ft[1]}${m.ht ? `, half time ${m.ht[0]}-${m.ht[1]}` : ""}"><span class="arch-date">${m.date}</span>` +
-        `<span class="arch-home">${m.home}</span>` +
-        `<span class="arch-score"><bdi dir="ltr">${m.ft[0]}–${m.ft[1]}</bdi>${m.ht ? ` <span class="arch-ht"><bdi dir="ltr">(${m.ht[0]}–${m.ht[1]})</bdi></span>` : ""}</span>` +
-        `<span class="arch-away">${m.away}</span></div>`
-    )
+  const rows = md.matches
+    .map((m) => {
+      const homeWin = m.ft[0] > m.ft[1];
+      const awayWin = m.ft[1] > m.ft[0];
+      return `<tr aria-label="${m.home} vs ${m.away}, full time ${m.ft[0]}-${m.ft[1]}${m.ht ? `, half time ${m.ht[0]}-${m.ht[1]}` : ""}">` +
+        `<td class="rt-date">${m.date}</td>` +
+        `<td class="rt-home${homeWin ? " rt-winner" : ""}">${m.home}</td>` +
+        `<td class="rt-score"><bdi dir="ltr">${m.ft[0]}–${m.ft[1]}</bdi>${m.ht ? ` <span class="rt-ht"><bdi dir="ltr">(${m.ht[0]}–${m.ht[1]})</bdi></span>` : ""}</td>` +
+        `<td class="rt-away${awayWin ? " rt-winner" : ""}">${m.away}</td></tr>`;
+    })
     .join("");
+  document.getElementById("archive").innerHTML =
+    `<div class="table-scroll"><table class="result-table"><thead><tr>` +
+    `<th>${T.thDate}</th><th class="rt-home">${T.thHome}</th><th>${T.thScore}</th><th>${T.thAway}</th>` +
+    `</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 function fillArchMd() {
@@ -442,34 +576,35 @@ function fillArchMd() {
   archMd = sel.value;
 }
 
-function fillArchSelectors() {
-  const sel = document.getElementById("arch-season");
-  sel.innerHTML = ARCH.seasons
-    .map((s) => `<option value="${s.season}">${s.season}</option>`)
+function fillArchSeasons() {
+  const box = document.getElementById("arch-seasons");
+  box.innerHTML = ARCH.seasons
+    .map((s) => `<button type="button" role="tab" class="season-pill${s.season === archSeason ? " active" : ""}" data-season="${s.season}">${s.season}</button>`)
     .join("");
-  sel.value = archSeason;
   fillArchMd();
 }
 
-archBlock.addEventListener("toggle", async () => {
-  if (!archBlock.open || ARCH) return;
+async function loadArchive() {
   try {
     const r = await fetch("data/archive.json", { cache: "no-store" });
     if (!r.ok) throw new Error("archive " + r.status);
     ARCH = await r.json();
     archSeason = ARCH.seasons[ARCH.seasons.length - 1].season;
     document.getElementById("arch-controls").hidden = false;
-    fillArchSelectors();
+    fillArchSeasons();
     renderArchive();
   } catch (e) {
     document.getElementById("archive").innerHTML =
       `<p class="notice">${e.message}</p>`;
   }
-});
-document.getElementById("arch-season").addEventListener("change", (e) => {
-  archSeason = e.target.value;
+}
+
+document.getElementById("arch-seasons").addEventListener("click", (e) => {
+  const b = e.target.closest(".season-pill");
+  if (!b) return;
+  archSeason = b.dataset.season;
   archMd = null;
-  fillArchMd();
+  fillArchSeasons();
   renderArchive();
 });
 document.getElementById("arch-md").addEventListener("change", (e) => {
@@ -481,22 +616,24 @@ document.getElementById("arch-md").addEventListener("change", (e) => {
 // no analysis). All dates/times provisional by design. ---
 let SCHED = null;
 let schedRound = null;
-const schedBlock = document.querySelector(".sched-block");
 
 function renderSchedule() {
   const T = I18N[LANG];
   const r = SCHED.rounds.find((x) => x.round === schedRound) || SCHED.rounds.find((x) => !x.stale) || SCHED.rounds[0];
-
+  const rows = r.matches
+    .map(
+      (m) => `<tr aria-label="${m.home} vs ${m.away}, ${m.date}${m.time_uk ? ", " + m.time_uk + " " + T.ukTimeTitle : ""}">` +
+        `<td class="rt-date">${m.date}</td>` +
+        `<td class="rt-home">${m.home}</td>` +
+        `<td class="rt-time" title="${T.ukTimeTitle}">${m.time_uk ? `<bdi dir="ltr">${m.time_uk}</bdi>` : "—"}</td>` +
+        `<td class="rt-away">${m.away}</td></tr>`
+    )
+    .join("");
   document.getElementById("schedule").innerHTML =
     (r.stale ? `<p class="notice sched-stale-note">${T.schedStaleRow}</p>` : "") +
-    r.matches
-      .map(
-        (m) => `<div class="arch-row" aria-label="${m.home} vs ${m.away}, ${m.date}${m.time_uk ? ", " + m.time_uk + " " + T.ukTimeTitle : ""}"><span class="arch-date">${m.date}</span>` +
-          `<span class="arch-home">${m.home}</span>` +
-          `<span class="sched-time" title="${T.ukTimeTitle}">${m.time_uk ? `<bdi dir="ltr">${m.time_uk}</bdi>` : "—"}</span>` +
-          `<span class="arch-away">${m.away}</span></div>`
-      )
-      .join("");
+    `<div class="table-scroll"><table class="result-table"><thead><tr>` +
+    `<th>${T.thDate}</th><th class="rt-home">${T.thHome}</th><th>${T.thTime}</th><th>${T.thAway}</th>` +
+    `</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 function fillSchedRounds() {
@@ -515,8 +652,7 @@ function fillSchedRounds() {
   schedRound = sel.value;
 }
 
-schedBlock.addEventListener("toggle", async () => {
-  if (!schedBlock.open || SCHED) return;
+async function loadSchedule() {
   try {
     const r = await fetch("data/schedule.json", { cache: "no-store" });
     if (!r.ok) throw new Error("schedule " + r.status);
@@ -528,7 +664,8 @@ schedBlock.addEventListener("toggle", async () => {
     document.getElementById("schedule").innerHTML =
       `<p class="notice">${e.message}</p>`;
   }
-});
+}
+
 document.getElementById("sched-round").addEventListener("change", (e) => {
   schedRound = e.target.value;
   renderSchedule();
