@@ -591,3 +591,21 @@ code {
   .rt-date { display: none; }
   .result-table td, .result-table thead th { padding: 0.35rem 0.5rem; }
 }
+
+/* --- multi-page layout: active page in top nav --- */
+body[data-page="fixtures"] .nav-link[data-page="fixtures"],
+body[data-page="archive"] .nav-link[data-page="archive"],
+body[data-page="analysis"] .nav-link[data-page="analysis"],
+body[data-page="sources"] .nav-link[data-page="sources"] {
+  color: #fff; background: var(--accent);
+}
+
+/* --- club and league emblems (Wikimedia, identification only) --- */
+.league-logo { height: 30px; width: auto; vertical-align: middle; margin-inline-end: 8px; }
+.crest { width: 18px; height: 18px; object-fit: contain; vertical-align: -3px; margin-inline-end: 5px; }
+.team-name { white-space: nowrap; }
+.teams { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.teams .vs { color: var(--muted, #6b7280); }
+.cell-team { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+.pm-team-head .crest { width: 20px; height: 20px; }
+.trademark { margin-top: 12px; }
