@@ -352,14 +352,17 @@ def main():
                 "xg5": avg("xg_for", last), "ppg": avg("points", played)}
 
     raw_fixtures = []
+    fd_fix_status = "failed"
     try:
         raw_fixtures = fetch_fd_fixtures()
+        fd_fix_status = "ok"
     except Exception as exc:
         print(f"تعذر جلب fixtures لدى Football-Data: {exc}")
     fd_keys = {(r["date"], r["home"], r["away"]) for r in raw_fixtures}
     played_pairs = {(str(r["match_datetime"])[:10], r["home_team"], r["away_team"])
                     for i, r in df.iterrows()}
     played_pairings = {(p[1], p[2]) for p in played_pairs}
+    of_status = "disabled"
     if OPENFOOTBALL_ENABLED:
         try:
             today_utc = datetime.now(timezone.utc)
@@ -381,8 +384,10 @@ def main():
                 raw_fixtures.append(r)
                 added += 1
             print(f"openfootball: {added} مقابلة مبدئية ضمن نافذة {OPENFOOTBALL_MAX_DAYS} يومًا")
+            of_status = "ok"
         except Exception as exc:
             print(f"تعذر جلب جدولة openfootball: {exc}")
+            of_status = "failed"
     if FDORG_ENABLED:
         try:
             fdorg_rows = fetch_fdorg_fixtures()
@@ -437,6 +442,8 @@ def main():
         ref_hist = df[df["referee"] == ref] if ref else df.iloc[0:0]
         low_team = hs["played"] < 3 or as_["played"] < 3
         low_ref = len(ref_hist) < 3
+        _r2 = lambda v: round(float(v), 2) if v is not None else None
+        ref_y = float(ref_hist["total_yellows"].mean()) if len(ref_hist) else None
         Xf = pd.DataFrame([{
             "h_gf5": hs["gf5"], "h_ga5": hs["ga5"], "a_gf5": as_["gf5"],
             "a_ga5": as_["ga5"], "h_y5": hs["y5"], "a_y5": as_["y5"],
@@ -464,6 +471,19 @@ def main():
             "kickoff_passed": kickoff_passed,
             "src": fr["src"],
             "provisional": bool(fr.get("provisional")),
+            # متغيرات ما قبل المباراة المحسوبة فعلًا: معدلات مشتقة من مباريات
+            # الموسم السابقة للمباراة فقط (آخر 5 للفورما، الموسم كاملًا للنقاط).
+            # قيمة None تعني «غير متاحة في العينة» ولا تُعرض أبدًا كصفر.
+            "prematch": {
+                "window": 5,
+                "home": {"played": hs["played"], "gf5": _r2(hs["gf5"]),
+                         "ga5": _r2(hs["ga5"]), "y5": _r2(hs["y5"]),
+                         "xg5": _r2(hs["xg5"]), "ppg": _r2(hs["ppg"])},
+                "away": {"played": as_["played"], "gf5": _r2(as_["gf5"]),
+                         "ga5": _r2(as_["ga5"]), "y5": _r2(as_["y5"]),
+                         "xg5": _r2(as_["xg5"]), "ppg": _r2(as_["ppg"])},
+                "referee_y_avg": _r2(ref_y),
+            },
             "probs": probs,
         })
 
@@ -548,6 +568,34 @@ def main():
             "source": "https://football-data.co.uk/mmz4281/2627/E0.csv",
             "fixtures_source": FIXTURES_URL,
             "train": int(split_idx), "test": int(n - split_idx),
+            # حالة مصادر الجلب الآلي وقت التوليد — شفافية كاملة: النجاح والفشل
+            # يظهران كما هما، والترخيص مكتوب بلا خلط بين «مجاني» و«مفتوح».
+            "sources": [
+                {"name": "Football-Data results CSV",
+                 "url": "https://football-data.co.uk/mmz4281/2627/E0.csv",
+                 "status": "ok",
+                 "coverage": f"{n} matches, {meta_row[0]} to {meta_row[1]}",
+                 "license": "free public CSV with attribution; no explicit redistribution license — the site shows derived aggregates only",
+                 "fetched_at": gen_utc},
+                {"name": "Football-Data fixtures CSV",
+                 "url": FIXTURES_URL,
+                 "status": fd_fix_status,
+                 "coverage": "upcoming EPL fixtures (confirmed dates)",
+                 "license": "free public CSV with attribution; no explicit redistribution license",
+                 "fetched_at": gen_utc if fd_fix_status == "ok" else None},
+                {"name": "openfootball england",
+                 "url": "https://github.com/openfootball/england",
+                 "status": of_status,
+                 "coverage": "results through round 5; provisional schedule beyond",
+                 "license": "CC0 public domain",
+                 "fetched_at": gen_utc if of_status == "ok" else None},
+                {"name": "Football-Data.org API",
+                 "url": "https://www.football-data.org/",
+                 "status": "disabled",
+                 "coverage": "no data displayed",
+                 "license": "free tier; activation pending — not fetched",
+                 "fetched_at": None},
+            ],
             "notes": [
                 "لقطة ثابتة بوقت التوليد، وليست بثًا مباشرًا ولا تحديثًا لحظيًا.",
                 "أرقام البطاقات خاصة بمصدر Football-Data وتختلف عن العد الرسمي في بعض المباريات.",
