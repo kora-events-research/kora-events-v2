@@ -562,6 +562,7 @@ code {
 /* ---------- mobile ---------- */
 @media (max-width: 640px) {
   .nav-inner { flex-wrap: wrap; padding: 0.4rem 0.8rem 0; row-gap: 0.2rem; }
+  .page-section, .page-section h2, .page-section h3 { scroll-margin-top: 190px; }
   .brand-name { font-size: 1rem; }
   .nav-links { order: 3; flex-basis: 100%; }
   .freshbar { padding: 0 0.8rem 0.4rem; }
