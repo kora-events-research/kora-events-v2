@@ -126,6 +126,8 @@ main {
 
 .page-section { scroll-margin-top: calc(var(--nav-h) + 44px); margin-top: 1.8rem; }
 .page-section h3, .page-section h2 { scroll-margin-top: calc(var(--nav-h) + 44px); }
+.src-cards { display: none; }
+.scroll-hint { display: none; }
 .page-section:first-of-type { margin-top: 0.6rem; }
 
 .sec-title {
@@ -563,6 +565,19 @@ code {
 @media (max-width: 640px) {
   .nav-inner { flex-wrap: wrap; padding: 0.4rem 0.8rem 0; row-gap: 0.2rem; }
   .page-section, .page-section h2, .page-section h3 { scroll-margin-top: 190px; }
+  .src-table { display: none; }
+  .src-cards { display: grid; gap: 0.6rem; }
+  .src-card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 0.55rem 0.7rem; }
+  .src-card-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; border-bottom: 1px solid var(--line); padding-bottom: 0.3rem; margin-bottom: 0.35rem; }
+  .src-row { display: flex; gap: 0.5rem; justify-content: space-between; font-size: 0.85rem; margin: 0.15rem 0; }
+  .src-row > span { color: var(--muted); flex-shrink: 0; }
+  .src-row > div { text-align: end; }
+  .src-lic { font-size: 0.85rem; margin-top: 0.25rem; }
+  .src-lic summary { color: var(--accent); cursor: pointer; }
+  .src-url { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; word-break: break-all; }
+  .scroll-hint { display: block; }
+  .table-wrap { position: relative; }
+  .table-wrap::after { content: ""; position: absolute; top: 0; bottom: 0; inset-inline-end: 0; width: 26px; pointer-events: none; background: linear-gradient(to inline-end, rgba(246,247,249,0.95), transparent); }
   .brand-name { font-size: 1rem; }
   .nav-links { order: 3; flex-basis: 100%; }
   .freshbar { padding: 0 0.8rem 0.4rem; }
