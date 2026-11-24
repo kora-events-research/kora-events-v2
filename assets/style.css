@@ -125,6 +125,7 @@ main {
 }
 
 .page-section { scroll-margin-top: calc(var(--nav-h) + 44px); margin-top: 1.8rem; }
+.page-section h3, .page-section h2 { scroll-margin-top: calc(var(--nav-h) + 44px); }
 .page-section:first-of-type { margin-top: 0.6rem; }
 
 .sec-title {
