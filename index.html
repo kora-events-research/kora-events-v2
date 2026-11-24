@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كرة الأحداث — Kora Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=20261124c">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <h1 id="t-title"></h1>
+    <p class="tagline" id="t-tagline"></p>
+  </div>
+  <div class="hdr-actions">
+    <span id="auth-who" class="auth-who"></span>
+    <button id="auth-btn" class="lang-btn" type="button"></button>
+    <button id="lang-toggle" class="lang-btn" type="button"></button>
+  </div>
+</header>
+
+<div class="freshbar">
+  <span id="freshness"></span>
+  <span class="freshbar-src" id="freshsource"></span>
+</div>
+
+<p class="notice small" id="t-disclaimer"></p>
+
+<main>
+  <section>
+    <h2 id="t-h-fixtures"></h2>
+    <div id="fixtures"></div>
+  </section>
+
+  <section id="results-section" hidden>
+    <h2 id="t-h-results"></h2>
+    <p class="hint" id="t-hint-results"></p>
+    <div id="results"></div>
+  </section>
+
+  <details class="arch-block">
+    <summary id="t-arch-heading"></summary>
+    <p class="hint" id="t-hint-arch"></p>
+    <div id="arch-controls" hidden>
+      <select id="arch-season" aria-label="season"></select>
+      <select id="arch-md" aria-label="round"></select>
+      <span class="hint" id="arch-coverage"></span>
+    </div>
+    <div id="archive"></div>
+  </details>
+
+  <details class="sched-block">
+    <summary id="t-sched-heading"></summary>
+    <p class="hint" id="t-hint-sched"></p>
+    <div id="sched-controls" hidden>
+      <select id="sched-round" aria-label="round"></select>
+      <span class="hint" id="sched-coverage" hidden></span>
+    </div>
+    <div id="schedule"></div>
+  </details>
+
+  <details class="demo-block">
+    <summary id="t-demo-heading"></summary>
+    <div id="fixtures-demo"></div>
+  </details>
+
+  <details class="tech-block">
+    <summary id="t-tech-heading"></summary>
+
+    <h3 id="t-h-events"></h3>
+    <p class="hint" id="t-hint-events"></p>
+    <div id="events" class="grid"></div>
+
+    <h3 id="t-h-metrics"></h3>
+    <p class="hint" id="t-hint-metrics"></p>
+    <div id="metrics"></div>
+    <p class="verdict" id="verdict"></p>
+
+    <h3 id="t-h-repro"></h3>
+    <p class="hint" id="t-hint-repro"></p>
+
+    <h3 id="t-h-limits"></h3>
+    <ul id="limits-list" class="limits"></ul>
+  </details>
+</main>
+
+<footer id="t-footer"></footer>
+
+<script type="module" src="assets/app.js?v=20261124c"></script>
+</body>
+</html>
