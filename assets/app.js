@@ -40,6 +40,7 @@ const I18N = {
     ukTimeTitle: "الوقت كما ورد في المصدر — المصدر لا يحدد منطقة زمنية؛ غير مؤكد",
     archHeading: "الأرشيف — نتائج المواسم",
     hintArch: "نتائج حقيقية من مصدر المجال العام openfootball (CC0). للتصفح فقط — بلا تحليل ولا احتمالات. النتيجة تُقرأ: صاحب الأرض أولًا، وبين قوسين نتيجة الشوط الأول.",
+    archScroll: "مرّر أفقيًا داخل الجدول لعرض كل الأعمدة",
     archPartial: (n) => `تغطية جزئية لهذا الموسم: ${n} مباراة مسجلة فقط — المصدر تطوعي وقد يتأخر عن الجدول الفعلي.`,
     archRound: (n) => `الجولة ${n}`,
     thDate: "التاريخ",
@@ -53,7 +54,7 @@ const I18N = {
     pmGF: "متوسط التسجيل لكل مباراة (آخر 5)",
     pmGA: "متوسط الاستقبال لكل مباراة (آخر 5)",
     pmY: "متوسط الصفراء لكل مباراة (آخر 5)",
-    pmXG: "متوسط الأهداف المتوقعة ⁦xG⁩ لكل مباراة (آخر 5)",
+    pmXG: 'متوسط الأهداف المتوقعة <span dir="ltr">xG</span> لكل مباراة (آخر 5)',
     pmPPG: "نقاط لكل مباراة (الموسم)",
     pmReferee: "الحكم",
     pmRefNone: "غير مسجل في المصدر",
@@ -149,6 +150,7 @@ const I18N = {
     ukTimeTitle: "time as recorded in the source, which specifies no timezone; unconfirmed",
     archHeading: "Archive — season results",
     hintArch: "Real results from the public-domain source openfootball (CC0). Browsing only — no analysis, no probabilities. Scores read home team first; brackets show half time.",
+    archScroll: "Swipe sideways inside the table to see all columns",
     archPartial: (n) => `Partial coverage for this season: only ${n} matches recorded — the source is volunteer-maintained and can lag the actual schedule.`,
     archRound: (n) => `Round ${n}`,
     thDate: "Date",
@@ -162,7 +164,7 @@ const I18N = {
     pmGF: "Goals for per match (last 5 avg)",
     pmGA: "Goals against per match (last 5 avg)",
     pmY: "Yellow cards per match (last 5 avg)",
-    pmXG: "Expected goals xG per match (last 5 avg)",
+    pmXG: 'Expected goals <span dir="ltr">xG</span> per match (last 5 avg)',
     pmPPG: "Points per match (season)",
     pmReferee: "Referee",
     pmRefNone: "not recorded in the source",
@@ -292,6 +294,7 @@ function applyLang() {
   document.getElementById("t-demo-heading").textContent = T.demoHeading;
   document.getElementById("t-arch-heading").textContent = T.archHeading;
   document.getElementById("t-hint-arch").textContent = T.hintArch;
+  document.getElementById("t-arch-scroll").textContent = T.archScroll;
   document.getElementById("t-sched-heading").textContent = T.schedHeading;
   document.getElementById("t-hint-sched").textContent = T.hintSched;
   if (ARCH) { fillArchSeasons(); renderArchive(); }
@@ -331,6 +334,8 @@ function setupNavSpy() {
     { rootMargin: "-30% 0px -60% 0px" }
   );
   secs.forEach((s) => obs.observe(s));
+  if (links[0] && !links.some((l) => l.classList.contains("active")))
+    links[0].classList.add("active");
 }
 
 function setupLazy(secId, loader) {
@@ -500,12 +505,20 @@ function render(s) {
 
   const srcStatus = { ok: T.srcOk, failed: T.srcFailed, disabled: T.srcDisabled };
   document.getElementById("sources").innerHTML = (m.sources || []).length
-    ? `<div class="scroll-x"><table>
+    ? `<div class="scroll-x src-table"><table>
       <tr>${T.thSrc.map((h) => `<th>${h}</th>`).join("")}</tr>
       ${m.sources.map((x) => `<tr>
-        <td>${x.name}</td><td>${x.coverage}</td><td>${x.license}</td>
+        <td>${x.name}</td><td dir="auto">${x.coverage}</td><td dir="auto">${x.license}</td>
         <td><span class="chip ${x.status === "ok" ? "ok" : x.status === "failed" ? "prov" : "date"}">${srcStatus[x.status] || x.status}</span></td>
-        <td>${x.fetched_at || "—"}</td></tr>`).join("")}</table></div>`
+        <td dir="ltr">${x.fetched_at || "—"}</td></tr>`).join("")}</table></div>
+    <div class="src-cards">
+      ${m.sources.map((x) => `<div class="src-card">
+        <div class="src-card-head"><b>${x.name}</b><span class="chip ${x.status === "ok" ? "ok" : x.status === "failed" ? "prov" : "date"}">${srcStatus[x.status] || x.status}</span></div>
+        <div class="src-row"><span>${T.thSrc[1]}</span><div dir="auto">${x.coverage}</div></div>
+        <div class="src-row"><span>${T.thSrc[4]}</span><div dir="ltr">${x.fetched_at || "—"}</div></div>
+        <details class="src-lic"><summary>${T.thSrc[2]}</summary><div dir="auto">${x.license}</div></details>
+        <div class="src-url" dir="ltr"><a href="${x.url}" rel="noopener">${x.url}</a></div>
+      </div>`).join("")}</div>`
     : "";
 
   document.getElementById("events").innerHTML = Object.entries(s.events)
