@@ -55,7 +55,7 @@ jobs:
       - name: assemble site
         run: |
           mkdir -p _site/data
-          cp index.html _site/
+          cp index.html archive.html analysis.html sources.html _site/
           cp -r assets _site/
           cp data/snapshot.json data/archive.json data/schedule.json data/forecast_log.json _site/data/
           if [ -f data/fdorg_schedule.json ]; then cp data/fdorg_schedule.json _site/data/; fi
