@@ -7,22 +7,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=20261124r2">
+<link rel="stylesheet" href="assets/style.css?v=20261124r3">
 </head>
-<body>
+<body data-page="fixtures">
 
 <header class="topnav">
   <div class="nav-inner">
-    <a class="brand" href="#top" id="brand-home">
+    <a class="brand" href="index.html" id="brand-home">
       <span class="brand-ball" aria-hidden="true">⚽</span>
       <span class="brand-name" id="t-title"></span>
     </a>
-    <nav class="nav-links" aria-label="sections">
-      <a href="#sec-fixtures" class="nav-link" id="nl-fixtures"></a>
-      <a href="#sec-results" class="nav-link" id="nl-results"></a>
-      <a href="#sec-archive" class="nav-link" id="nl-archive"></a>
-      <a href="#sec-schedule" class="nav-link" id="nl-schedule"></a>
-      <a href="#sec-tech" class="nav-link" id="nl-tech"></a>
+    <nav class="nav-links" aria-label="pages">
+      <a href="index.html" class="nav-link" id="nl-fixtures" data-page="fixtures"></a>
+      <a href="archive.html" class="nav-link" id="nl-archive" data-page="archive"></a>
+      <a href="analysis.html" class="nav-link" id="nl-analysis" data-page="analysis"></a>
+      <a href="sources.html" class="nav-link" id="nl-sources" data-page="sources"></a>
     </nav>
     <div class="hdr-actions">
       <span id="auth-who" class="auth-who"></span>
@@ -41,73 +40,18 @@
   <p class="disclaimer" id="t-disclaimer"></p>
 
   <section id="sec-fixtures" class="page-section">
-    <h2 class="sec-title" id="t-h-fixtures"></h2>
+    <h2 class="sec-title"><img class="league-logo" src="https://thumb.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/120px-Premier_League_Logo.svg.png" alt="" loading="lazy" onerror="this.style.display='none'"><span id="t-h-fixtures"></span></h2>
     <div id="fixtures"></div>
-  </section>
-
-  <section id="sec-results" class="page-section" hidden>
-    <h2 class="sec-title" id="t-h-results"></h2>
-    <p class="hint" id="t-hint-results"></p>
-    <div id="results"></div>
-  </section>
-
-  <section id="sec-archive" class="page-section">
-    <div class="sec-head">
-      <h2 class="sec-title" id="t-arch-heading"></h2>
-      <div class="sec-controls" id="arch-controls" hidden>
-        <div class="season-pills" id="arch-seasons" role="tablist"></div>
-        <select id="arch-md" aria-label="round"></select>
-      </div>
-    </div>
-    <p class="hint" id="t-hint-arch"></p>
-    <p class="hint coverage" id="arch-coverage"></p>
-    <p class="hint scroll-hint" id="t-arch-scroll"></p>
-    <div id="archive" class="table-wrap"></div>
-  </section>
-
-  <section id="sec-schedule" class="page-section">
-    <div class="sec-head">
-      <h2 class="sec-title" id="t-sched-heading"></h2>
-      <div class="sec-controls" id="sched-controls" hidden>
-        <select id="sched-round" aria-label="round"></select>
-      </div>
-    </div>
-    <p class="hint" id="t-hint-sched"></p>
-    <p class="hint coverage" id="sched-coverage" hidden></p>
-    <div id="schedule" class="table-wrap"></div>
   </section>
 
   <section id="sec-demo" class="page-section" hidden>
     <h2 class="sec-title warn-title" id="t-demo-heading"></h2>
     <div id="fixtures-demo"></div>
   </section>
-
-  <section id="sec-tech" class="page-section">
-    <h2 class="sec-title" id="t-tech-heading"></h2>
-
-    <h3 id="t-h-sources"></h3>
-    <p class="hint" id="t-hint-sources"></p>
-    <div id="sources"></div>
-
-    <h3 id="t-h-events"></h3>
-    <p class="hint" id="t-hint-events"></p>
-    <div id="events" class="grid"></div>
-
-    <h3 id="t-h-metrics"></h3>
-    <p class="hint" id="t-hint-metrics"></p>
-    <div id="metrics"></div>
-    <p class="verdict" id="verdict"></p>
-
-    <h3 id="t-h-repro"></h3>
-    <p class="hint" id="t-hint-repro"></p>
-
-    <h3 id="t-h-limits"></h3>
-    <ul id="limits-list" class="limits"></ul>
-  </section>
 </main>
 
 <footer id="t-footer"></footer>
 
-<script type="module" src="assets/app.js?v=20261124r2"></script>
+<script type="module" src="assets/app.js?v=20261124r3"></script>
 </body>
 </html>
