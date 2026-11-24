@@ -9,8 +9,11 @@ const I18N = {
     navFixtures: "المباريات",
     navResults: "التوقع والنتيجة",
     navArchive: "الأرشيف",
-    navSchedule: "الجدولة",
-    navTech: "التفاصيل",
+    navAnalysis: "التحليل",
+    navSources: "المصادر",
+    hAnalysis: "التحليل وقياس الدقة",
+    hSourcesPage: "المصادر والحدود وإعادة الإنتاج",
+    trademark: "شعارات الأندية والدوري علامات تجارية مملوكة لأصحابها، تُعرض هنا لغرض التعريف فقط وتُقدَّم من خوادم ويكيميديا. هذا المشروع البحثي المستقل غير تابع لأي منها ولا ترعاه.",
     freshness: (m) => `آخر تحديث: ${m.generated_at_utc} · بيانات حتى ${m.to} · ${m.matches} مباراة هذا الموسم`,
     freshsource: "المصادر: Football-Data (نتائج وأحداث) + openfootball (جدولة مبدئية موسومة)",
     srcLine: (s) => `مصدر الجدولة: ${s}`,
@@ -119,8 +122,11 @@ const I18N = {
     navFixtures: "Fixtures",
     navResults: "Forecast vs outcome",
     navArchive: "Archive",
-    navSchedule: "Schedule",
-    navTech: "Details",
+    navAnalysis: "Analysis",
+    navSources: "Sources",
+    hAnalysis: "Analysis and accuracy tracking",
+    hSourcesPage: "Sources, limits and reproduction",
+    trademark: "Club and league emblems are trademarks of their respective owners, shown here for identification only and served from Wikimedia servers. This independent research project is not affiliated with, or endorsed by, any of them.",
     freshness: (m) => `Last updated: ${m.generated_at_utc} · data through ${m.to} · ${m.matches} matches this season`,
     freshsource: "Sources: Football-Data (results, events) + openfootball (labeled provisional schedule)",
     srcLine: (s) => `Schedule source: ${s}`,
@@ -234,6 +240,86 @@ const EVENT_LABEL_EN = {
   corners_high: "10+ corners",
 };
 
+const PAGE = document.body.dataset.page || "fixtures";
+const NAVKEY = { fixtures: "navFixtures", archive: "navArchive", analysis: "navAnalysis", sources: "navSources" };
+const $ = (id) => document.getElementById(id);
+const setText = (id, v) => { const n = $(id); if (n) n.textContent = v; };
+const setHTML = (id, v) => { const n = $(id); if (n) n.innerHTML = v; };
+
+/* Club crests: thumbnails (96px) of the crest images used on each club's
+   English Wikipedia article, served directly from Wikimedia. Shown for
+   identification only; emblems are trademarks of their owners (see the
+   trademark note on the sources page). Keyed by every raw team-name string
+   that appears in the data files; an unmapped name shows no image. */
+const CRESTS = {
+  "AFC Bournemouth": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/e5/AFC_Bournemouth_%282013%29.svg/120px-AFC_Bournemouth_%282013%29.svg.png",
+  "Arsenal": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/120px-Arsenal_FC.svg.png",
+  "Arsenal FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/120px-Arsenal_FC.svg.png",
+  "Aston Villa": "https://thumb.wikimedia.org/wikipedia/en/thumb/9/9a/Aston_Villa_FC_new_crest.svg/120px-Aston_Villa_FC_new_crest.svg.png",
+  "Aston Villa FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/9/9a/Aston_Villa_FC_new_crest.svg/120px-Aston_Villa_FC_new_crest.svg.png",
+  "Bournemouth": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/e5/AFC_Bournemouth_%282013%29.svg/120px-AFC_Bournemouth_%282013%29.svg.png",
+  "Brentford": "https://thumb.wikimedia.org/wikipedia/en/thumb/2/2a/Brentford_FC_crest.svg/120px-Brentford_FC_crest.svg.png",
+  "Brentford FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/2/2a/Brentford_FC_crest.svg/120px-Brentford_FC_crest.svg.png",
+  "Brighton": "https://thumb.wikimedia.org/wikipedia/en/thumb/d/d0/Brighton_and_Hove_Albion_FC_crest.svg/120px-Brighton_and_Hove_Albion_FC_crest.svg.png",
+  "Brighton & Hove Albion": "https://thumb.wikimedia.org/wikipedia/en/thumb/d/d0/Brighton_and_Hove_Albion_FC_crest.svg/120px-Brighton_and_Hove_Albion_FC_crest.svg.png",
+  "Brighton & Hove Albion FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/d/d0/Brighton_and_Hove_Albion_FC_crest.svg/120px-Brighton_and_Hove_Albion_FC_crest.svg.png",
+  "Burnley": "https://thumb.wikimedia.org/wikipedia/en/thumb/6/6d/Burnley_FC_Logo.svg/120px-Burnley_FC_Logo.svg.png",
+  "Burnley FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/6/6d/Burnley_FC_Logo.svg/120px-Burnley_FC_Logo.svg.png",
+  "Chelsea": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/120px-Chelsea_FC.svg.png",
+  "Chelsea FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/120px-Chelsea_FC.svg.png",
+  "Coventry": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/7b/Coventry_City_FC_crest.svg/120px-Coventry_City_FC_crest.svg.png",
+  "Coventry City FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/7b/Coventry_City_FC_crest.svg/120px-Coventry_City_FC_crest.svg.png",
+  "Crystal Palace": "https://thumb.wikimedia.org/wikipedia/en/thumb/a/a2/Crystal_Palace_FC_logo_%282022%29.svg/120px-Crystal_Palace_FC_logo_%282022%29.svg.png",
+  "Crystal Palace FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/a/a2/Crystal_Palace_FC_logo_%282022%29.svg/120px-Crystal_Palace_FC_logo_%282022%29.svg.png",
+  "Everton": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/7c/Everton_FC_logo.svg/120px-Everton_FC_logo.svg.png",
+  "Everton FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/7c/Everton_FC_logo.svg/120px-Everton_FC_logo.svg.png",
+  "Fulham": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/eb/Fulham_FC_%28shield%29.svg/120px-Fulham_FC_%28shield%29.svg.png",
+  "Fulham FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/eb/Fulham_FC_%28shield%29.svg/120px-Fulham_FC_%28shield%29.svg.png",
+  "Hull": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/54/Hull_City_A.F.C._logo.svg/120px-Hull_City_A.F.C._logo.svg.png",
+  "Hull City AFC": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/54/Hull_City_A.F.C._logo.svg/120px-Hull_City_A.F.C._logo.svg.png",
+  "Ipswich": "https://thumb.wikimedia.org/wikipedia/en/thumb/4/43/Ipswich_Town.svg/120px-Ipswich_Town.svg.png",
+  "Ipswich Town FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/4/43/Ipswich_Town.svg/120px-Ipswich_Town.svg.png",
+  "Leeds": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/54/Leeds_United_F.C._logo.svg/120px-Leeds_United_F.C._logo.svg.png",
+  "Leeds United": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/54/Leeds_United_F.C._logo.svg/120px-Leeds_United_F.C._logo.svg.png",
+  "Leeds United FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/5/54/Leeds_United_F.C._logo.svg/120px-Leeds_United_F.C._logo.svg.png",
+  "Leicester City FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/2/2d/Leicester_City_crest.svg/120px-Leicester_City_crest.svg.png",
+  "Liverpool": "https://thumb.wikimedia.org/wikipedia/en/thumb/0/0c/Liverpool_FC.svg/120px-Liverpool_FC.svg.png",
+  "Liverpool FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/0/0c/Liverpool_FC.svg/120px-Liverpool_FC.svg.png",
+  "Luton Town FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/9/9d/Luton_Town_logo.svg/120px-Luton_Town_logo.svg.png",
+  "Man City": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/eb/Manchester_City_FC_badge.svg/120px-Manchester_City_FC_badge.svg.png",
+  "Man United": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/120px-Manchester_United_FC_crest.svg.png",
+  "Manchester City": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/eb/Manchester_City_FC_badge.svg/120px-Manchester_City_FC_badge.svg.png",
+  "Manchester City FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/eb/Manchester_City_FC_badge.svg/120px-Manchester_City_FC_badge.svg.png",
+  "Manchester United": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/120px-Manchester_United_FC_crest.svg.png",
+  "Manchester United FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/120px-Manchester_United_FC_crest.svg.png",
+  "Newcastle": "https://thumb.wikimedia.org/wikipedia/en/thumb/8/87/Newcastle_United_FC_2026_crest.svg/120px-Newcastle_United_FC_2026_crest.svg.png",
+  "Newcastle United": "https://thumb.wikimedia.org/wikipedia/en/thumb/8/87/Newcastle_United_FC_2026_crest.svg/120px-Newcastle_United_FC_2026_crest.svg.png",
+  "Newcastle United FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/8/87/Newcastle_United_FC_2026_crest.svg/120px-Newcastle_United_FC_2026_crest.svg.png",
+  "Nott'm Forest": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/e5/Nottingham_Forest_F.C._logo.svg/120px-Nottingham_Forest_F.C._logo.svg.png",
+  "Nottingham Forest": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/e5/Nottingham_Forest_F.C._logo.svg/120px-Nottingham_Forest_F.C._logo.svg.png",
+  "Nottingham Forest FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/e/e5/Nottingham_Forest_F.C._logo.svg/120px-Nottingham_Forest_F.C._logo.svg.png",
+  "Sheffield United FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/9/9c/Sheffield_United_FC_logo.svg/120px-Sheffield_United_FC_logo.svg.png",
+  "Southampton FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/c9/FC_Southampton.svg/120px-FC_Southampton.svg.png",
+  "Sunderland": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/77/Logo_Sunderland.svg/120px-Logo_Sunderland.svg.png",
+  "Sunderland AFC": "https://thumb.wikimedia.org/wikipedia/en/thumb/7/77/Logo_Sunderland.svg/120px-Logo_Sunderland.svg.png",
+  "Tottenham": "https://thumb.wikimedia.org/wikipedia/en/thumb/b/b4/Tottenham_Hotspur.svg/120px-Tottenham_Hotspur.svg.png",
+  "Tottenham Hotspur": "https://thumb.wikimedia.org/wikipedia/en/thumb/b/b4/Tottenham_Hotspur.svg/120px-Tottenham_Hotspur.svg.png",
+  "Tottenham Hotspur FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/b/b4/Tottenham_Hotspur.svg/120px-Tottenham_Hotspur.svg.png",
+  "West Ham United": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/c2/West_Ham_United_FC_logo.svg/120px-West_Ham_United_FC_logo.svg.png",
+  "West Ham United FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/c2/West_Ham_United_FC_logo.svg/120px-West_Ham_United_FC_logo.svg.png",
+  "Wolverhampton Wanderers": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/c9/Wolverhampton_Wanderers_FC_crest.svg/120px-Wolverhampton_Wanderers_FC_crest.svg.png",
+  "Wolverhampton Wanderers FC": "https://thumb.wikimedia.org/wikipedia/en/thumb/c/c9/Wolverhampton_Wanderers_FC_crest.svg/120px-Wolverhampton_Wanderers_FC_crest.svg.png"
+};
+
+const crestTag = (name) => {
+  const u = CRESTS[name];
+  return u
+    ? `<img class="crest" src="${u}" alt="" loading="lazy" onerror="this.style.display='none'">`
+    : "";
+};
+const teamSpan = (name) =>
+  `<span class="team-name">${crestTag(name)}${name}</span>`;
+
 let LANG = localStorage.getItem("kora-lang") || "ar";
 let SNAP = null;
 
@@ -255,7 +341,6 @@ async function boot() {
     ev.stopPropagation();
     toggleFavorite(star.dataset.key);
   });
-  setupNavSpy();
   setupLazy("sec-archive", loadArchive);
   setupLazy("sec-schedule", loadSchedule);
   try {
@@ -264,82 +349,65 @@ async function boot() {
     SNAP = await r.json();
     render(SNAP);
   } catch (e) {
-    document.getElementById("fixtures").innerHTML =
-      `<p class="notice">${e.message}</p>`;
+    setHTML("fixtures", `<p class="notice">${e.message}</p>`);
   }
 }
 
-document.getElementById("lang-toggle").addEventListener("click", () => {
-  LANG = LANG === "ar" ? "en" : "ar";
-  localStorage.setItem("kora-lang", LANG);
-  applyLang();
-});
+{
+  const lt = $("lang-toggle");
+  if (lt) lt.addEventListener("click", () => {
+    LANG = LANG === "ar" ? "en" : "ar";
+    localStorage.setItem("kora-lang", LANG);
+    applyLang();
+  });
+}
 
 function applyLang() {
   const T = I18N[LANG];
   document.documentElement.lang = LANG;
   document.documentElement.dir = T.dir;
-  document.getElementById("lang-toggle").textContent = T.toggle;
+  setText("lang-toggle", T.toggle);
   setAuthLang(LANG);
-  document.getElementById("t-title").textContent = T.title;
-  document.getElementById("t-disclaimer").innerHTML = T.disclaimer;
-  document.getElementById("nl-fixtures").textContent = T.navFixtures;
-  document.getElementById("nl-results").textContent = T.navResults;
-  document.getElementById("nl-archive").textContent = T.navArchive;
-  document.getElementById("nl-schedule").textContent = T.navSchedule;
-  document.getElementById("nl-tech").textContent = T.navTech;
-  document.getElementById("t-h-fixtures").textContent = T.hFixtures;
-  document.getElementById("t-h-results").textContent = T.hResults;
-  document.getElementById("t-hint-results").textContent = T.hintResults;
-  document.getElementById("t-demo-heading").textContent = T.demoHeading;
-  document.getElementById("t-arch-heading").textContent = T.archHeading;
-  document.getElementById("t-hint-arch").textContent = T.hintArch;
-  document.getElementById("t-arch-scroll").textContent = T.archScroll;
-  document.getElementById("t-sched-heading").textContent = T.schedHeading;
-  document.getElementById("t-hint-sched").textContent = T.hintSched;
+  setText("t-title", T.title);
+  document.title = `${T[NAVKEY[PAGE]]} — ${T.title}`;
+  setHTML("t-disclaimer", T.disclaimer);
+  setText("nl-fixtures", T.navFixtures);
+  setText("nl-archive", T.navArchive);
+  setText("nl-analysis", T.navAnalysis);
+  setText("nl-sources", T.navSources);
+  setText("t-h-fixtures", T.hFixtures);
+  setText("t-h-analysis", T.hAnalysis);
+  setText("t-h-sourcespage", T.hSourcesPage);
+  setText("t-h-results", T.hResults);
+  setText("t-hint-results", T.hintResults);
+  setText("t-demo-heading", T.demoHeading);
+  setText("t-arch-heading", T.archHeading);
+  setText("t-hint-arch", T.hintArch);
+  setText("t-arch-scroll", T.archScroll);
+  setText("t-sched-heading", T.schedHeading);
+  setText("t-hint-sched", T.hintSched);
   if (ARCH) { fillArchSeasons(); renderArchive(); }
   if (SCHED) { fillSchedRounds(); renderSchedule(); }
-  document.getElementById("t-tech-heading").textContent = T.techHeading;
-  document.getElementById("t-h-sources").textContent = T.hSources;
-  document.getElementById("t-hint-sources").textContent = T.hintSources;
-  document.getElementById("t-h-events").textContent = T.hEvents;
-  document.getElementById("t-hint-events").textContent = T.hintEvents;
-  document.getElementById("t-h-metrics").textContent = T.hMetrics;
-  document.getElementById("t-hint-metrics").textContent = T.hintMetrics;
-  document.getElementById("t-h-repro").textContent = T.hRepro;
-  document.getElementById("t-hint-repro").innerHTML = T.hintRepro;
-  document.getElementById("t-h-limits").textContent = T.hLimits;
-  document.getElementById("verdict").textContent = T.verdict;
-  document.getElementById("t-footer").innerHTML = T.footer;
-  document.getElementById("freshsource").textContent = T.freshsource;
+  setText("t-h-sources", T.hSources);
+  setText("t-hint-sources", T.hintSources);
+  setText("t-h-events", T.hEvents);
+  setText("t-hint-events", T.hintEvents);
+  setText("t-h-metrics", T.hMetrics);
+  setText("t-hint-metrics", T.hintMetrics);
+  setText("t-h-repro", T.hRepro);
+  setHTML("t-hint-repro", T.hintRepro);
+  setText("t-h-limits", T.hLimits);
+  setText("verdict", T.verdict);
+  setText("t-trademark", T.trademark);
+  setHTML("t-footer", T.footer);
+  setText("freshsource", T.freshsource);
   if (SNAP) render(SNAP);
 }
 
-/* ---------- nav spy + lazy section loading ---------- */
-function setupNavSpy() {
-  const links = [...document.querySelectorAll(".nav-link")];
-  const secs = links
-    .map((l) => document.querySelector(l.getAttribute("href")))
-    .filter(Boolean);
-  if (!("IntersectionObserver" in window)) return;
-  const obs = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((en) => {
-        if (!en.isIntersecting) return;
-        links.forEach((l) =>
-          l.classList.toggle("active", l.getAttribute("href") === "#" + en.target.id)
-        );
-      });
-    },
-    { rootMargin: "-30% 0px -60% 0px" }
-  );
-  secs.forEach((s) => obs.observe(s));
-  if (links[0] && !links.some((l) => l.classList.contains("active")))
-    links[0].classList.add("active");
-}
-
+/* ---------- lazy section loading ---------- */
 function setupLazy(secId, loader) {
   const sec = document.getElementById(secId);
+  if (!sec) return;
   let started = false;
   const start = () => { if (!started) { started = true; loader(); } };
   if ("IntersectionObserver" in window) {
@@ -386,7 +454,7 @@ function pmTeamBlock(name, st, T) {
   const v = (x) => x === null || x === undefined
     ? `<span class="pm-missing">${T.pmRefNone}</span>` : x;
   return `<div class="pm-team">
-    <div class="pm-team-head"><span class="pm-team-name">${name}</span><span class="pm-note">${T.pmTeamMatches(st.played)}${st.played < 3 ? " · " + T.pmLowSample : ""}</span></div>
+    <div class="pm-team-head"><span class="pm-team-name">${crestTag(name)}${name}</span><span class="pm-note">${T.pmTeamMatches(st.played)}${st.played < 3 ? " · " + T.pmLowSample : ""}</span></div>
     <div class="pm-stat"><span>${T.pmGF}</span><b>${v(st.gf5)}</b></div>
     <div class="pm-stat"><span>${T.pmGA}</span><b>${v(st.ga5)}</b></div>
     <div class="pm-stat"><span>${T.pmY}</span><b>${v(st.y5)}</b></div>
@@ -436,7 +504,7 @@ function fixtureCard(f, s, T) {
     : `<span class="chip date">${f.date}</span><span class="chip ok">${f.time} ${T.ukTime}</span>`;
   return `<details class="fixture-card">
     <summary>
-      <span class="teams">${f.home} — ${f.away}</span>
+      <span class="teams">${teamSpan(f.home)}<span class="vs">—</span>${teamSpan(f.away)}</span>
       <span class="card-meta">${metaChips}</span>
       <span class="tap">${T.tapToOpen}</span>
       <button type="button" class="fav-star" data-key="${f.date}|${f.home}|${f.away}" aria-label="${T.favAdd}">${isFav(`${f.date}|${f.home}|${f.away}`) ? "★" : "☆"}</button>
@@ -463,29 +531,31 @@ const m_of = (s) => s.meta;
 function render(s) {
   const m = s.meta;
   const T = I18N[LANG];
-  document.getElementById("freshness").textContent = T.freshness(m);
+  setText("freshness", T.freshness(m));
 
   const notes = (LANG === "en" && T.notesEn) ? T.notesEn : m.notes;
-  document.getElementById("limits-list").innerHTML =
-    [...notes, ...T.limits].map((n) => `<li>${n}</li>`).join("");
+  setHTML("limits-list",
+    [...notes, ...T.limits].map((n) => `<li>${n}</li>`).join(""));
 
   // فصل صارم: مباريات قادمة حقيقية مقابل أمثلة استرجاعية توضيحية
   const upcoming = s.fixtures.filter((f) => f.kickoff_passed !== true);
   const retro = s.fixtures.filter((f) => f.kickoff_passed === true);
-  document.getElementById("fixtures").innerHTML = upcoming.length
+  if ($("fixtures")) setHTML("fixtures", upcoming.length
     ? upcoming.map((f) => fixtureCard(f, s, T)).join("")
-    : `<div class="notice small">${T.noFixtures}</div>`;
-  document.getElementById("fixtures-demo").innerHTML =
-    retro.map((f) => fixtureCard(f, s, T)).join("");
-  document.getElementById("sec-demo").hidden = retro.length === 0;
+    : `<div class="notice small">${T.noFixtures}</div>`);
+  if ($("fixtures-demo")) {
+    setHTML("fixtures-demo",
+      retro.map((f) => fixtureCard(f, s, T)).join(""));
+    $("sec-demo").hidden = retro.length === 0;
+  }
 
   // التوقع مقابل النتيجة: يظهر فقط عند وجود تقييمات فعلية
-  const resSec = document.getElementById("sec-results");
+  const resSec = $("sec-results");
   const results = s.results || [];
+  if (resSec) {
   resSec.hidden = results.length === 0;
-  document.getElementById("nl-results").style.display = results.length ? "" : "none";
   if (results.length) {
-    document.getElementById("results").innerHTML = results.map((r) => {
+    $("results").innerHTML = results.map((r) => {
       const rows = Object.entries(r.events).map(([e, v]) =>
         `<div class="probrow">
           <div class="probrow-top">
@@ -495,16 +565,17 @@ function render(s) {
           </div>
         </div>`).join("");
       return `<div class="fixture-card result-card">
-        <div class="teams">${r.home} — ${r.away}</div>
+        <div class="teams">${teamSpan(r.home)}<span class="vs">—</span>${teamSpan(r.away)}</div>
         <div class="sub">${r.date}</div>
         <div class="sub">${T.resForecast} (${r.forecast_at})${r.model_info ? " · " + r.model_info : ""} · ${T.resActual}:</div>
         ${rows}
       </div>`;
     }).join("");
   }
+  }
 
   const srcStatus = { ok: T.srcOk, failed: T.srcFailed, disabled: T.srcDisabled };
-  document.getElementById("sources").innerHTML = (m.sources || []).length
+  if ($("sources")) $("sources").innerHTML = (m.sources || []).length
     ? `<div class="scroll-x src-table"><table>
       <tr>${T.thSrc.map((h) => `<th>${h}</th>`).join("")}</tr>
       ${m.sources.map((x) => `<tr>
@@ -521,7 +592,7 @@ function render(s) {
       </div>`).join("")}</div>`
     : "";
 
-  document.getElementById("events").innerHTML = Object.entries(s.events)
+  if ($("events")) $("events").innerHTML = Object.entries(s.events)
     .map(([id, ev]) => {
       const badge = ev.descriptive
         ? `<span class="badge desc">${T.badgeDesc}</span>`
@@ -532,7 +603,7 @@ function render(s) {
     })
     .join("");
 
-  document.getElementById("metrics").innerHTML = `<div class="scroll-x"><table>
+  if ($("metrics")) $("metrics").innerHTML = `<div class="scroll-x"><table>
     <tr>${T.tbl.map((h) => `<th>${h}</th>`).join("")}</tr>
     ${s.experiment
       .map((r) => {
@@ -602,9 +673,9 @@ function renderArchive() {
       const awayWin = m.ft[1] > m.ft[0];
       return `<tr aria-label="${m.home} vs ${m.away}, full time ${m.ft[0]}-${m.ft[1]}${m.ht ? `, half time ${m.ht[0]}-${m.ht[1]}` : ""}">` +
         `<td class="rt-date">${m.date}</td>` +
-        `<td class="rt-home${homeWin ? " rt-winner" : ""}">${m.home}</td>` +
+        `<td class="rt-home${homeWin ? " rt-winner" : ""}"><span class="cell-team">${crestTag(m.home)}${m.home}</span></td>` +
         `<td class="rt-score"><bdi dir="ltr">${m.ft[0]}–${m.ft[1]}</bdi>${m.ht ? ` <span class="rt-ht"><bdi dir="ltr">(${m.ht[0]}–${m.ht[1]})</bdi></span>` : ""}</td>` +
-        `<td class="rt-away${awayWin ? " rt-winner" : ""}">${m.away}</td></tr>`;
+        `<td class="rt-away${awayWin ? " rt-winner" : ""}"><span class="cell-team">${crestTag(m.away)}${m.away}</span></td></tr>`;
     })
     .join("");
   document.getElementById("archive").innerHTML =
@@ -649,18 +720,22 @@ async function loadArchive() {
   }
 }
 
-document.getElementById("arch-seasons").addEventListener("click", (e) => {
-  const b = e.target.closest(".season-pill");
-  if (!b) return;
-  archSeason = b.dataset.season;
-  archMd = null;
-  fillArchSeasons();
-  renderArchive();
-});
-document.getElementById("arch-md").addEventListener("change", (e) => {
-  archMd = e.target.value;
-  renderArchive();
-});
+{
+  const seasonsEl = $("arch-seasons");
+  if (seasonsEl) seasonsEl.addEventListener("click", (e) => {
+    const b = e.target.closest(".season-pill");
+    if (!b) return;
+    archSeason = b.dataset.season;
+    archMd = null;
+    fillArchSeasons();
+    renderArchive();
+  });
+  const mdSel = $("arch-md");
+  if (mdSel) mdSel.addEventListener("change", (e) => {
+    archMd = e.target.value;
+    renderArchive();
+  });
+}
 
 // --- Full-season upcoming schedule (openfootball CC0 rows only; browsing,
 // no analysis). All dates/times provisional by design. ---
@@ -674,9 +749,9 @@ function renderSchedule() {
     .map(
       (m) => `<tr aria-label="${m.home} vs ${m.away}, ${m.date}${m.time_uk ? ", " + m.time_uk + " " + T.ukTimeTitle : ""}">` +
         `<td class="rt-date">${m.date}</td>` +
-        `<td class="rt-home">${m.home}</td>` +
+        `<td class="rt-home"><span class="cell-team">${crestTag(m.home)}${m.home}</span></td>` +
         `<td class="rt-time" title="${T.ukTimeTitle}">${m.time_uk ? `<bdi dir="ltr">${m.time_uk}</bdi>` : "—"}</td>` +
-        `<td class="rt-away">${m.away}</td></tr>`
+        `<td class="rt-away"><span class="cell-team">${crestTag(m.away)}${m.away}</span></td></tr>`
     )
     .join("");
   document.getElementById("schedule").innerHTML =
@@ -716,9 +791,12 @@ async function loadSchedule() {
   }
 }
 
-document.getElementById("sched-round").addEventListener("change", (e) => {
-  schedRound = e.target.value;
-  renderSchedule();
-});
+{
+  const roundSel = $("sched-round");
+  if (roundSel) roundSel.addEventListener("change", (e) => {
+    schedRound = e.target.value;
+    renderSchedule();
+  });
+}
 
 boot();
