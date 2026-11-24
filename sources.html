@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كرة الأحداث — Kora Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=20261124r3">
+</head>
+<body data-page="sources">
+
+<header class="topnav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html" id="brand-home">
+      <span class="brand-ball" aria-hidden="true">⚽</span>
+      <span class="brand-name" id="t-title"></span>
+    </a>
+    <nav class="nav-links" aria-label="pages">
+      <a href="index.html" class="nav-link" id="nl-fixtures" data-page="fixtures"></a>
+      <a href="archive.html" class="nav-link" id="nl-archive" data-page="archive"></a>
+      <a href="analysis.html" class="nav-link" id="nl-analysis" data-page="analysis"></a>
+      <a href="sources.html" class="nav-link" id="nl-sources" data-page="sources"></a>
+    </nav>
+    <div class="hdr-actions">
+      <span id="auth-who" class="auth-who"></span>
+      <button id="auth-btn" class="pill-btn" type="button"></button>
+      <button id="lang-toggle" class="pill-btn" type="button"></button>
+    </div>
+  </div>
+  <div class="freshbar">
+    <span id="freshness"></span>
+    <span class="freshbar-sep" aria-hidden="true">·</span>
+    <span id="freshsource"></span>
+  </div>
+</header>
+
+<main id="top">
+  <h2 class="sec-title" id="t-h-sourcespage"></h2>
+
+  <section class="page-section">
+    <h3 id="t-h-sources"></h3>
+    <p class="hint" id="t-hint-sources"></p>
+    <div id="sources"></div>
+  </section>
+
+  <section class="page-section">
+    <h3 id="t-h-repro"></h3>
+    <p class="hint" id="t-hint-repro"></p>
+  </section>
+
+  <section class="page-section">
+    <h3 id="t-h-limits"></h3>
+    <ul id="limits-list" class="limits"></ul>
+    <p class="hint trademark" id="t-trademark"></p>
+  </section>
+</main>
+
+<footer id="t-footer"></footer>
+
+<script type="module" src="assets/app.js?v=20261124r3"></script>
+</body>
+</html>
