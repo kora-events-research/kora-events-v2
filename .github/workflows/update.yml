@@ -1,0 +1,75 @@
+name: refresh-snapshot
+
+# تحديث اللقطة مرتين أسبوعيًا (ليلة الأحد وليلة الأربعاء بتوقيت UTC) توافقًا مع
+# إيقاع تحديث ملف المصدر لدى Football-Data، دون أي استقصاء متكرر للموقع.
+#
+# 2026-11-24: النشر أصبح عبر artifact مباشرة إلى Pages (لا Jekyll من الفرع)،
+# حتى يمكن لاحقًا تقديم حمولات مشتقة من مزودين دون إلزامها في تاريخ Git العام
+# (قابلة للإبطال: تُحذف من الموقع بإعادة النشر). الفرع يبقى كاملًا قابلًا
+# للتشغيل — العودة إلى «Deploy from a branch» تعيد النشر القديم فورًا.
+
+on:
+  # موافق لإيقاع نشر المصدر الموثق: الجدولة تُجمع جمعة/ثلاثاء بعد الظهر UK،
+  # والنتائج تُحدَّث ليلة الأحد وليلة الأربعاء. التقاط الجدولة مساء الجمعة
+  # والثلاثاء هو ما يجعل التوقعات «قبل الانطلاق» فعلًا.
+  schedule:
+    - cron: "30 17 * * 5"   # الجمعة 17:30 UTC — بعد نشر جدولة نهاية الأسبوع
+    - cron: "30 17 * * 2"   # الثلاثاء 17:30 UTC — بعد نشر جدولة منتصف الأسبوع
+    - cron: "0 23 * * 0"    # الأحد 23:00 UTC — بعد تحديث نتائج الأحد
+    - cron: "0 23 * * 3"    # الأربعاء 23:00 UTC — بعد تحديث نتائج الأربعاء
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pandas numpy
+      - name: rebuild snapshot
+        env:
+          FOOTBALL_DATA_ORG_TOKEN: ${{ secrets.FOOTBALL_DATA_ORG_TOKEN }}
+        run: |
+          python3 src/build_db.py
+          python3 src/export_site.py
+          python3 src/build_archive.py
+          python3 src/build_schedule.py
+      - name: commit snapshot if changed
+        run: |
+          git config user.name "kora-events-bot"
+          git config user.email "kora-events-bot@users.noreply.github.com"
+          git add data/
+          git diff --cached --quiet || git commit -m "chore: تحديث اللقطة $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
+      - name: assemble site
+        run: |
+          mkdir -p _site/data
+          cp index.html _site/
+          cp -r assets _site/
+          cp data/snapshot.json data/archive.json data/schedule.json data/forecast_log.json _site/data/
+          if [ -f data/fdorg_schedule.json ]; then cp data/fdorg_schedule.json _site/data/; fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+          retention-days: 1
+  deploy:
+    needs: refresh
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
