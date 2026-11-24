@@ -48,26 +48,26 @@ const I18N = {
     thAway: "الضيف",
     thTime: "الوقت",
     pmTitle: "البيانات المجمعة قبل المباراة",
-    pmAsOf: (m) => `حتى لقطة ${m.generated_at_utc}`,
-    pmDate: "التاريخ",
-    pmKickoff: "توقيت الانطلاق",
+    pmAsOf: (m) => `محسوبة من مباريات الموسم السابقة للمباراة فقط · حتى لقطة ${m.generated_at_utc}`,
+    pmTeamMatches: (n) => `${n} مباراة في العينة`,
+    pmGF: "سجلت (آخر 5)",
+    pmGA: "استقبلت (آخر 5)",
+    pmY: "بطاقات صفراء (آخر 5)",
+    pmXG: "أهداف متوقعة xG (آخر 5)",
+    pmPPG: "نقاط لكل مباراة (الموسم)",
     pmReferee: "الحكم",
-    pmRefHistory: "سجل الحكم في العينة",
-    pmTeamData: "تغطية بيانات الفريقين",
-    pmSource: "مصدر الموعد",
-    pmForecast: "حالة التوقع",
+    pmRefNone: "غير مسجل في المصدر",
+    pmRefNoneNote: "خانة فارغة في المصدر — لا تعني صفرًا",
+    pmRefAvg: (y, n) => `متوسط الصفراء في مبارياته السابقة: ${y} عبر ${n} مباراة`,
+    pmNoHist: "لا سجل سابقًا في العينة",
+    pmLowSample: "عينة صغيرة — القيم أقل ثباتًا",
+    pmKickoff: "توقيت الانطلاق",
     pmTimeProv: "غير مؤكد (مصدر مبدئي)",
     pmTimeConf: (t) => `${t} بتوقيت المصدر`,
-    pmRefNone: "لم يُعلن بعد",
-    pmRefNoneNote: "خانة فارغة في المصدر — ليست صفر مباريات",
-    pmRefCount: (n) => `${n} مباراة سابقة في العينة`,
-    pmCovOk: "مكتملة في العينة",
-    pmCovLow: "محدودة — الوصف أقل ثباتًا",
+    pmSource: "مصدر الموعد",
     pmSrcProv: "openfootball (مبدئي)",
     pmSrcFD: "Football-Data (مؤكد)",
-    pmForeSaved: "محفوظ قبل الانطلاق",
-    pmForeCurrent: "تقدير اللقطة الحالية",
-    pmForeRetro: "استرجاعي — بعد الانطلاق",
+    pmFigures: "الأرقام أدناه معدلات مرجعية للدوري — ليست توقعًا مخصصًا لهذه المباراة",
     referee: (f) => `الحكم: ${f.referee || "لم يُعلن"}`,
     retro: (f) => `عرض استرجاعي: وُلّد بعد انطلاق المباراة (${f.kickoff_london || "غير معروف"}) — ليس توقعًا مسبقًا ولا يدخل تقييم الدقة.`,
     saved: (f, m) => `توقع محفوظ قبل الانطلاق (${f.kickoff_london}) ضمن لقطة ${m.generated_at_utc} — سيُقارن بالنتيجة الفعلية بعد المباراة.`,
@@ -78,6 +78,12 @@ const I18N = {
     resForecast: "التوقع قبل المباراة",
     resActual: "ما حدث فعلًا",
     happened: "حدث", notHappened: "لم يحدث",
+    hSources: "مصادر البيانات والجلب الآلي",
+    hintSources: "تُجلب البيانات وتُعاد بناء اللقطة آليًا 4 مرات أسبوعيًا (جدولة ثابتة، وليست بثًا لحظيًا). حالة كل مصدر وقت آخر توليد:",
+    thSrc: ["المصدر", "التغطية", "الترخيص", "الحالة", "آخر جلب"],
+    srcOk: "نجح",
+    srcFailed: "فشل — تُعرض آخر لقطة ناجحة",
+    srcDisabled: "موقوف",
     hEvents: "الأحداث المُعرَّفة",
     hintEvents: "ستة أحداث قابلة للتحقق، مُعرَّفة تعريفًا تشغيليًا دقيقًا في الشيفرة المصدرية.",
     hMetrics: "قياس الدقة التجريبي",
@@ -151,26 +157,26 @@ const I18N = {
     thAway: "Away",
     thTime: "Time",
     pmTitle: "Collected pre-match data",
-    pmAsOf: (m) => `as of snapshot ${m.generated_at_utc}`,
-    pmDate: "Date",
-    pmKickoff: "Kickoff time",
+    pmAsOf: (m) => `computed from this season's matches before the fixture only · as of snapshot ${m.generated_at_utc}`,
+    pmTeamMatches: (n) => `${n} matches in sample`,
+    pmGF: "Goals for (last 5)",
+    pmGA: "Goals against (last 5)",
+    pmY: "Yellow cards (last 5)",
+    pmXG: "Expected goals xG (last 5)",
+    pmPPG: "Points per match (season)",
     pmReferee: "Referee",
-    pmRefHistory: "Referee history in sample",
-    pmTeamData: "Team data coverage",
-    pmSource: "Fixture source",
-    pmForecast: "Forecast status",
+    pmRefNone: "not recorded in the source",
+    pmRefNoneNote: "empty source field — does not mean zero",
+    pmRefAvg: (y, n) => `avg total yellows in prior matches: ${y} across ${n} matches`,
+    pmNoHist: "no prior record in sample",
+    pmLowSample: "small sample — values less stable",
+    pmKickoff: "Kickoff time",
     pmTimeProv: "unconfirmed (provisional source)",
     pmTimeConf: (t) => `${t} source time`,
-    pmRefNone: "not announced yet",
-    pmRefNoneNote: "empty in the source — not zero matches",
-    pmRefCount: (n) => `${n} prior matches in sample`,
-    pmCovOk: "complete in sample",
-    pmCovLow: "limited — descriptive stats less stable",
+    pmSource: "Fixture source",
     pmSrcProv: "openfootball (provisional)",
     pmSrcFD: "Football-Data (confirmed)",
-    pmForeSaved: "saved before kickoff",
-    pmForeCurrent: "current snapshot estimate",
-    pmForeRetro: "retrospective — post-kickoff",
+    pmFigures: "The figures below are league reference rates — not a match-specific forecast",
     referee: (f) => `Referee: ${f.referee || "not announced"}`,
     retro: (f) => `Retrospective demo: generated after the listed kickoff (${f.kickoff_london || "unknown"}) — not a pre-kickoff forecast, never counted in accuracy.`,
     saved: (f, m) => `Forecast saved before kickoff (${f.kickoff_london}) in the ${m.generated_at_utc} snapshot — it will be compared with the actual result after the match.`,
@@ -181,6 +187,12 @@ const I18N = {
     resForecast: "Pre-match forecast",
     resActual: "What happened",
     happened: "Happened", notHappened: "Did not happen",
+    hSources: "Data sources and automatic fetching",
+    hintSources: "Data is fetched and the snapshot rebuilt automatically 4 times a week (fixed schedule, not a live feed). Status of each source at the latest build:",
+    thSrc: ["Source", "Coverage", "License", "Status", "Last fetch"],
+    srcOk: "ok",
+    srcFailed: "failed — showing last good snapshot",
+    srcDisabled: "disabled",
     hEvents: "Defined events",
     hintEvents: "Six checkable events, each with a precise operational definition in the source code.",
     hMetrics: "Experimental accuracy",
@@ -285,6 +297,8 @@ function applyLang() {
   if (ARCH) { fillArchSeasons(); renderArchive(); }
   if (SCHED) { fillSchedRounds(); renderSchedule(); }
   document.getElementById("t-tech-heading").textContent = T.techHeading;
+  document.getElementById("t-h-sources").textContent = T.hSources;
+  document.getElementById("t-hint-sources").textContent = T.hintSources;
   document.getElementById("t-h-events").textContent = T.hEvents;
   document.getElementById("t-hint-events").textContent = T.hintEvents;
   document.getElementById("t-h-metrics").textContent = T.hMetrics;
@@ -359,11 +373,26 @@ function probRows(f, s, T) {
     .join("");
 }
 
-/* Pre-match variables panel: every variable actually collected for a
-   fixture, with coverage/source/as-of. Missing is shown as missing,
-   never as zero. No post-match statistic appears here. */
+/* Pre-match variables panel: every variable actually computed for a
+   fixture (rolling team form, referee history), with coverage, source
+   and as-of. Missing is shown as missing, never as zero. No post-match
+   statistic appears here; values come from matches before the fixture. */
+function pmTeamBlock(name, st, T) {
+  const v = (x) => x === null || x === undefined
+    ? `<span class="pm-missing">${T.pmRefNone}</span>` : x;
+  return `<div class="pm-team">
+    <div class="pm-team-head"><span class="pm-team-name">${name}</span><span class="pm-note">${T.pmTeamMatches(st.played)}${st.played < 3 ? " · " + T.pmLowSample : ""}</span></div>
+    <div class="pm-stat"><span>${T.pmGF}</span><b>${v(st.gf5)}</b></div>
+    <div class="pm-stat"><span>${T.pmGA}</span><b>${v(st.ga5)}</b></div>
+    <div class="pm-stat"><span>${T.pmY}</span><b>${v(st.y5)}</b></div>
+    <div class="pm-stat"><span>${T.pmXG}</span><b>${v(st.xg5)}</b></div>
+    <div class="pm-stat"><span>${T.pmPPG}</span><b>${v(st.ppg)}</b></div>
+  </div>`;
+}
+
 function prematchPanel(f, s, T) {
   const m = m_of(s);
+  const pm = f.prematch;
   const kickVal = f.provisional
     ? `<span class="pm-missing">${T.pmTimeProv}</span>`
     : T.pmTimeConf(f.time);
@@ -371,25 +400,23 @@ function prematchPanel(f, s, T) {
     ? f.referee
     : `<span class="pm-missing">${T.pmRefNone}</span>`;
   const refNote = f.referee
-    ? T.pmRefCount(f.ref_prior_matches)
+    ? (pm && pm.referee_y_avg !== null && pm.referee_y_avg !== undefined
+        ? T.pmRefAvg(pm.referee_y_avg, f.ref_prior_matches)
+        : T.pmNoHist)
     : T.pmRefNoneNote;
-  const covVal = f.low_team_data
-    ? `<span class="pm-missing">${T.pmCovLow}</span>`
-    : T.pmCovOk;
   const srcVal = f.provisional ? T.pmSrcProv : T.pmSrcFD;
-  const foreVal =
-    f.kickoff_passed === true ? T.pmForeRetro :
-    f.kickoff_passed === false ? T.pmForeSaved : T.pmForeCurrent;
+  const teams = pm
+    ? `<div class="pm-teams">${pmTeamBlock(f.home, pm.home, T)}${pmTeamBlock(f.away, pm.away, T)}</div>`
+    : "";
   return `<div class="prematch">
     <div class="prematch-head"><span>${T.pmTitle}</span><span class="asof">${T.pmAsOf(m)}</span></div>
+    ${teams}
     <div class="prematch-grid">
-      <div class="pm-row"><span class="pm-label">${T.pmDate}</span><span class="pm-value">${f.date}</span></div>
-      <div class="pm-row"><span class="pm-label">${T.pmKickoff}</span><span class="pm-value">${kickVal}</span></div>
       <div class="pm-row"><span class="pm-label">${T.pmReferee}</span><span class="pm-value">${refVal}</span><span class="pm-note">${refNote}</span></div>
-      <div class="pm-row"><span class="pm-label">${T.pmTeamData}</span><span class="pm-value">${covVal}</span></div>
+      <div class="pm-row"><span class="pm-label">${T.pmKickoff}</span><span class="pm-value">${kickVal}</span></div>
       <div class="pm-row"><span class="pm-label">${T.pmSource}</span><span class="pm-value">${srcVal}</span></div>
-      <div class="pm-row"><span class="pm-label">${T.pmForecast}</span><span class="pm-value">${foreVal}</span></div>
     </div>
+    <div class="pm-figures">${T.pmFigures}</div>
   </div>`;
 }
 
@@ -470,6 +497,16 @@ function render(s) {
       </div>`;
     }).join("");
   }
+
+  const srcStatus = { ok: T.srcOk, failed: T.srcFailed, disabled: T.srcDisabled };
+  document.getElementById("sources").innerHTML = (m.sources || []).length
+    ? `<div class="scroll-x"><table>
+      <tr>${T.thSrc.map((h) => `<th>${h}</th>`).join("")}</tr>
+      ${m.sources.map((x) => `<tr>
+        <td>${x.name}</td><td>${x.coverage}</td><td>${x.license}</td>
+        <td><span class="chip ${x.status === "ok" ? "ok" : x.status === "failed" ? "prov" : "date"}">${srcStatus[x.status] || x.status}</span></td>
+        <td>${x.fetched_at || "—"}</td></tr>`).join("")}</table></div>`
+    : "";
 
   document.getElementById("events").innerHTML = Object.entries(s.events)
     .map(([id, ev]) => {
