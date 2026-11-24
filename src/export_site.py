@@ -353,9 +353,11 @@ def main():
 
     raw_fixtures = []
     fd_fix_status = "failed"
+    fd_fix_count = 0
     try:
         raw_fixtures = fetch_fd_fixtures()
         fd_fix_status = "ok"
+        fd_fix_count = len(raw_fixtures)
     except Exception as exc:
         print(f"تعذر جلب fixtures لدى Football-Data: {exc}")
     fd_keys = {(r["date"], r["home"], r["away"]) for r in raw_fixtures}
@@ -560,6 +562,11 @@ def main():
             "events": events,
         })
 
+    fd_fix_cov = "fetch failed at build time"
+    if fd_fix_status == "ok":
+        fd_fix_cov = (f"{fd_fix_count} upcoming E0 rows at fetch time; dates as listed by the source"
+                      if fd_fix_count else
+                      "0 upcoming E0 rows in the file at fetch time — displayed fixtures come from openfootball (provisional)")
     snap = {
         "meta": {
             "league": "الدوري الإنجليزي الممتاز", "league_code": "E0", "season": "2026/27",
@@ -580,8 +587,8 @@ def main():
                 {"name": "Football-Data fixtures CSV",
                  "url": FIXTURES_URL,
                  "status": fd_fix_status,
-                 "coverage": "upcoming EPL fixtures (confirmed dates)",
-                 "license": "free public CSV with attribution; no explicit redistribution license",
+                 "coverage": fd_fix_cov,
+                 "license": "free public CSV with attribution; no explicit redistribution license — the file carries odds columns; only date, time, teams and referee are read",
                  "fetched_at": gen_utc if fd_fix_status == "ok" else None},
                 {"name": "openfootball england",
                  "url": "https://github.com/openfootball/england",
